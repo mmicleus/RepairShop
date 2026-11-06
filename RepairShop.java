@@ -23,6 +23,7 @@ public class RepairShop {
     // quotation variables
     private double[] quotations = new double[5];
     private double quotation;
+    private int counter;
     private final int DISCOUNT = 10;
     private final double EXPRESS_SERVICE_CHARGE = 20;
 
@@ -37,6 +38,8 @@ public class RepairShop {
         this.basePrice = 0;
         this.quotation = 0;
         this.discountAmount = 0;
+        this.counter = 0;
+
     }
 
     //set
@@ -111,7 +114,58 @@ public class RepairShop {
         
         quotation = basePrice - discountAmount + (expressServRequired ? EXPRESS_SERVICE_CHARGE : 0);
 
+        quotations[counter] = quotation;
+        counter += 1;
+
     }
+
+    private double getQuotationsTotal(){
+
+        double sum = 0;
+        for(int i = 0;i < counter;i++){
+            sum += quotations[i];
+        }
+
+        return sum;
+    }
+
+    private double getHighestQuotation(){
+
+        double max = quotations[0];
+
+        for(int i = 1;i < counter;i++){
+            max = Math.max(max,quotations[i]);
+        }
+
+        return max;
+    }
+
+
+    
+
+
+    public String getQuotationTotals(){
+
+        double total = getQuotationsTotal();
+
+        double highest = getHighestQuotation();
+
+        double averageQuotation = total / counter;
+
+        String result = "";
+
+        for(int i = 0;i < counter;i++){
+            result += "Quotation " + (i+1) + ":" + "€" + String.format("%.2f",quotations[i]) + ";";
+        }
+
+
+
+        return result + "Number Of Quotations: " + counter + ";Combined value: " + "€" + String.format("%.2f", total) + 
+                ";Highest: " + "€" + String.format("%.2f", highest) + 
+                ";Average:" + "€" + String.format("%.2f", averageQuotation);
+    }
+
+
 
     // show summary after single quotation
     public String getSummary(){
