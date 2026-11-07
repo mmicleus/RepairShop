@@ -1,45 +1,37 @@
 /*
 Marian Micleusanu
-10/10/2026
+07/11/2026
 */
-
 public class RepairShop {
-
-    //variables
-
-    //variables
-
-    // user input data
+   //variables
+    // User Input
     private String name;
     private int serviceId;
     private boolean isStudent;
     private boolean expressServRequired;
-
     //computed values
     private double basePrice;
     private double discountAmount;
-
-
-    // quotation variables
-    private double[] quotations = new double[5];
+    // the double array storing the 5 quotations
+    private double[] quotations;
     private double quotation;
+    // the variable storing the number of quotations issued so far
     private int counter;
+    // discount percentage
     private final int DISCOUNT = 10;
     private final double EXPRESS_SERVICE_CHARGE = 20;
 
- 
-    
-
+    // constructor
     public RepairShop(){
         this.name = "";
         this.serviceId = 0;
         this.isStudent = false;
         this.expressServRequired = false;
-        this.basePrice = 0;
-        this.quotation = 0;
-        this.discountAmount = 0;
+        this.basePrice = 0.0;
+        this.quotation = 0.0;
+        this.discountAmount = 0.0;
         this.counter = 0;
-
+        quotations = new double[5];
     }
 
     //set
@@ -47,8 +39,8 @@ public class RepairShop {
         this.name = name;
     }
 
-    public void setServiceId(int repairService){
-        this.serviceId = repairService;
+    public void setServiceId(int serviceId){
+        this.serviceId = serviceId;
     }
 
     public void setIsStudent(boolean isStudent){
@@ -59,6 +51,7 @@ public class RepairShop {
         this.expressServRequired = required;
     }
 
+    // get service name from service id
     private String getServiceName(){
         switch(serviceId){
             case 1:
@@ -73,8 +66,7 @@ public class RepairShop {
                 return "";
         }
     }
-
-
+    // compute service price
     private void computeBasePrice(){
         switch(serviceId){
             case 1:
@@ -94,9 +86,8 @@ public class RepairShop {
             break;
         }
     }
-
+// compute student discount based on base price computed earlier
     private void computeDiscountAmount(){
-
         if(isStudent){
             discountAmount = basePrice / DISCOUNT;
         }else{
@@ -104,62 +95,57 @@ public class RepairShop {
         }
     }
 
-    //compute
-
+    //compute single quotation 
     public void computeQuotation(){
-
         computeBasePrice();
-
         computeDiscountAmount();
-        
         quotation = basePrice - discountAmount + (expressServRequired ? EXPRESS_SERVICE_CHARGE : 0);
-
+        // record quotation in the 'quotations' array and increment the counter
         quotations[counter] = quotation;
         counter += 1;
-
     }
-
-    private double getQuotationsTotal(){
-
+    // returns the sum of all quotations in the array
+    private double getTotal(){
         double sum = 0;
         for(int i = 0;i < counter;i++){
             sum += quotations[i];
         }
-
         return sum;
     }
-
+    //returns the highest quotation in the array
     private double getHighestQuotation(){
-
         double max = quotations[0];
-
         for(int i = 1;i < counter;i++){
             max = Math.max(max,quotations[i]);
         }
-
         return max;
     }
-
-
-    
-
-
+    // get
+    public int getCounter(){
+        return counter;
+    }
+     // get summary of single quotation (menu option #1)
+    public String getSummary(){   
+        String result = "Customer: " + name + 
+        "; Service: " + getServiceName() + 
+        "; Base price: " + "€" + String.format("%.2f",basePrice) + 
+        "; Discount: " + "€" + String.format("%.2f",discountAmount) + 
+        "; Express charge: "+"€" + (expressServRequired ? String.format("%.2f",EXPRESS_SERVICE_CHARGE) : String.format("%.2f",0.0)) + 
+        "; Final total: " + "€" + String.format("%.2f",quotation);
+        return result;
+    }
+    //get summary of all quotations issued so far (menu option #2)
     public String getQuotationTotals(){
-
-        double total = getQuotationsTotal();
-
+        if (counter == 0){
+            return "No quotations have been issued yet!";
+        }
+        double total = getTotal();
         double highest = getHighestQuotation();
-
         double averageQuotation = total / counter;
-
         String result = "";
-
         for(int i = 0;i < counter;i++){
             result += "Quotation " + (i+1) + ":" + "€" + String.format("%.2f",quotations[i]) + ";";
         }
-
-
-
         return result + "Number Of Quotations: " + counter + ";Combined value: " + "€" + String.format("%.2f", total) + 
                 ";Highest: " + "€" + String.format("%.2f", highest) + 
                 ";Average:" + "€" + String.format("%.2f", averageQuotation);
@@ -167,18 +153,8 @@ public class RepairShop {
 
 
 
-    // show summary after single quotation
-    public String getSummary(){
-        
-        String result = "Customer: " + name + 
-        "; Service: " + getServiceName() + 
-        "; Base price: " + "€" + String.format("%.2f",basePrice) + 
-        "; Discount: " + "€" + String.format("%.2f",discountAmount) + 
-        "; Express charge: "+"€" + (expressServRequired ? String.format("%.2f",EXPRESS_SERVICE_CHARGE) : String.format("%.2f",0.0)) + 
-        "; Final total: " + "€" + String.format("%.2f",quotation);
-        
-        return result;
+   
 
-    }
+    
 
 }
